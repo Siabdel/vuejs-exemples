@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Devis Syndic</title>
+  <!-- Link to Vue.js and Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+</head>
+<body>
+
+  <div id="app" class="container mt-4">
+    <h2 class="mb-4">Devis Syndic</h2>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Activité</th>
+          <th>Effectif</th>
+          <th>Salaire</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="item in devisItems" :key="item.id">
+          <td>{{ item.activity }}</td>
+          <td><input type="number" v-model="item.effectif"></td>
+          <td><input type="number" v-model="item.salaire"></td>
+          <td>{{ calculateTotal(item) }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h4 class="mt-4">Total Général: {{ calculateGrandTotal() }}</h4>
+  </div>
+
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        devisItems: [
+          { id: 1, activity: 'Gardinage', effectif: 0, salaire: 0 },
+          { id: 2, activity: 'Jardinage', effectif: 0, salaire: 0 },
+          { id: 3, activity: 'Picinite', effectif: 0, salaire: 0 },
+          { id: 4, activity: 'Ménage', effectif: 0, salaire: 0 },
+          { id: 5, activity: 'MAINTENANCE', effectif: 0, salaire: 0 },
+          { id: 6, activity: 'Honoraire syndic', effectif: 1, salaire: 0 }
+        ]
+      },
+      methods: {
+        calculateTotal(item) {
+          return item.effectif * item.salaire;
+        },
+        calculateGrandTotal() {
+          let grandTotal = 0;
+          this.devisItems.forEach(item => {
+            grandTotal += this.calculateTotal(item);
+          });
+          return grandTotal;
+        }
+      }
+    });
+  </script>
+
+</body>
+</html>
+

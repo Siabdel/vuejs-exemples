@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stations Radio en France</title>
+  <!-- Link to Vue.js, Bootstrap CSS, and Axios -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+
+  <div id="app" class="container mt-4">
+    <h2 class="mb-4">Stations Radio en France</h2>
+
+    <ul class="list-group">
+      <li v-for="station in radioStations" :key="station.id" class="list-group-item">
+        <div>
+          <strong>{{ station.name }}</strong> - {{ station.city }} ({{ station.frequency }})
+        </div>
+        <button class="btn btn-primary" @click="playRadio(station.streamurl)">Écouter</button>
+      </li>
+    </ul>
+  </div>
+
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+         radioStations: [
+        { id: 1, name: 'Radio France', city: 'Paris', frequency: '102.5 FM', streamurl: 'http://stream.radiofrance.fr/' },
+        { id: 2, name: 'RTL', city: 'Paris', frequency: '104.3 FM', streamurl: 'http://stream.rtl.fr/' },
+        { id: 3, name: 'Europe 1', city: 'Paris', frequency: '98.7 FM', streamurl: 'http://stream.europe1.fr/' },
+        { id: 4, name: 'NRJ', city: 'Paris', frequency: '100.3 FM', streamurl: 'http://stream.nrj.fr/' },
+        // Ajoutez d'autres stations selon vos besoins
+      ]
+      },
+      mounted() {
+        this.fetchRadioStations();
+      },
+      methods: {
+        fetchRadioStations() {
+          const apiUrl = 'https://fr1.api.radio-browser.info/json/stations/bycountry/France?hidebroken=true&order=clickcount&reverse=true'; 
+          axios.get(apiUrl, { headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3' } })
+            .then(response => {
+              this.radioStations = response.data;
+            })
+            .catch(error => {
+              console.error('Error fetching radio stations:', error);
+            });
+        },
+        playRadio(streamUrl) {
+          window.open(streamUrl, '_blank');
+        }
+      }
+    });
+  </script>
+
+</body>
+</html>
+
